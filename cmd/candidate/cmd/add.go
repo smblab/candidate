@@ -16,9 +16,13 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"os"
+	"strconv"
 
 	"github.com/golang/protobuf/ptypes"
+	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 
@@ -27,10 +31,15 @@ import (
 
 // addCmd represents the add command
 var addCmd = &cobra.Command{
-	Use:   "add",
+	Use:   "add <message> <amount>",
 	Short: "Add transaction",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) < 2 {
+			cmd.Usage()
+			os.Exit(1)
+		}
+
 		conn, err := grpc.Dial("localhost:50052", grpc.WithInsecure())
 		if err != nil {
 			panic(err)
@@ -40,14 +49,24 @@ var addCmd = &cobra.Command{
 		client := pb.NewTransactionServiceClient(conn)
 		ctx := context.Background()
 
+		uuid, err := uuid.NewUUID()
+		if err != nil {
+			panic(err)
+		}
+
+		amount, err := strconv.ParseFloat(args[1], 64)
+		if err != nil {
+			panic(err)
+		}
+
 		t, err := client.CreateTransaction(ctx, &pb.CreateTransactionRequest{
-			RequestId: "1",
+			RequestId: uuid.String(),
 			Transaction: &pb.Transaction{
-				Name:    "accounts/1/transactions/1",
+				Name:    fmt.Sprintf("accounts/1/transactions/%s", uuid.String()),
 				Parent:  "accounts/1",
-				Message: "Message goes here",
+				Message: args[0],
 				Amount: &pb.Money{
-					Amount:       100.0,
+					Amount:       amount,
 					CurrencyCode: "NOK",
 				},
 				TransactionTime: ptypes.TimestampNow(),
