@@ -62,9 +62,10 @@ var addCmd = &cobra.Command{
 		t, err := client.CreateTransaction(ctx, &pb.CreateTransactionRequest{
 			RequestId: uuid.String(),
 			Transaction: &pb.Transaction{
-				Name:    fmt.Sprintf("accounts/1/transactions/%s", uuid.String()),
-				Parent:  "accounts/1",
-				Message: args[0],
+				Name:          fmt.Sprintf("accounts/1/transactions/%s", uuid.String()),
+				Parent:        "accounts/1",
+				Message:       args[0],
+				RemoteAccount: "Some remote account",
 				Amount: &pb.Money{
 					Amount:       amount,
 					CurrencyCode: "NOK",

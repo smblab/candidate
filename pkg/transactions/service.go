@@ -60,6 +60,7 @@ func (s *Service) CreateTransaction(ctx context.Context, r *pb.CreateTransaction
 		Name:            r.Transaction.Name,
 		Parent:          r.Transaction.Parent,
 		Message:         r.Transaction.Message,
+		RemoteAccount:   r.Transaction.RemoteAccount,
 		Amount:          r.Transaction.Amount.Amount,
 		CurrencyCode:    r.Transaction.Amount.CurrencyCode,
 		TransactionTime: tstamp,
@@ -85,9 +86,10 @@ func (s *Service) GetTransaction(ctx context.Context, r *pb.GetTransactionReques
 	tstamp, _ := ptypes.TimestampProto(t.TransactionTime)
 
 	return &pb.Transaction{
-		Name:    t.Name,
-		Parent:  t.Parent,
-		Message: t.Message,
+		Name:          t.Name,
+		Parent:        t.Parent,
+		Message:       t.Message,
+		RemoteAccount: t.RemoteAccount,
 		Amount: &pb.Money{
 			Amount:       t.Amount,
 			CurrencyCode: t.CurrencyCode,

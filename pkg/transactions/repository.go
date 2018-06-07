@@ -13,6 +13,7 @@ type Transaction struct {
 	Name            string `gorm:"primary_key"`
 	Parent          string `gorm:"index"`
 	Message         string
+	RemoteAccount   string
 	Amount          float64
 	CurrencyCode    string
 	TransactionTime time.Time
