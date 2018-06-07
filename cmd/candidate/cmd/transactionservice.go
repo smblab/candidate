@@ -45,7 +45,7 @@ var transactionserviceCmd = &cobra.Command{
 		server := grpc.NewServer()
 		pb.RegisterTransactionServiceServer(server, service)
 
-		log.Println("Listening on :50053")
+		log.Println("Transaction service listening on :50052")
 		if err := server.Serve(lis); err != nil {
 			panic(err)
 		}

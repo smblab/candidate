@@ -15,9 +15,15 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
+	"net"
 
 	"github.com/spf13/cobra"
+	"google.golang.org/grpc"
+
+	"github.com/smblab/candidate/pkg/balance"
+	"github.com/smblab/candidate/pkg/balance/pb"
+	tpb "github.com/smblab/candidate/pkg/transactions/pb"
 )
 
 // balanceserviceCmd represents the balanceservice command
@@ -26,7 +32,27 @@ var balanceserviceCmd = &cobra.Command{
 	Short: "Launch balance service",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("balanceservice called")
+		conn, err := grpc.Dial("localhost:50052", grpc.WithInsecure())
+		if err != nil {
+			panic(err)
+		}
+		defer conn.Close()
+
+		client := tpb.NewTransactionServiceClient(conn)
+
+		lis, err := net.Listen("tcp", ":50053")
+		if err != nil {
+			panic(err)
+		}
+
+		service := balance.NewService(client)
+		server := grpc.NewServer()
+		pb.RegisterBalanceServiceServer(server, service)
+
+		log.Println("Balance service listening on :50053")
+		if err := server.Serve(lis); err != nil {
+			panic(err)
+		}
 	},
 }
 
