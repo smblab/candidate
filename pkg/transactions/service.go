@@ -119,7 +119,7 @@ func (s *Service) ListTransactions(r *pb.ListTransactionsRequest, stream pb.Tran
 
 	for _, t := range transactions {
 		tstamp, _ := ptypes.TimestampProto(t.TransactionTime)
-		stream.Send(&pb.Transaction{
+		if err := stream.Send(&pb.Transaction{
 			Name:   t.Name,
 			Parent: t.Parent,
 			Amount: &pb.Money{
@@ -127,7 +127,9 @@ func (s *Service) ListTransactions(r *pb.ListTransactionsRequest, stream pb.Tran
 				CurrencyCode: t.CurrencyCode,
 			},
 			TransactionTime: tstamp,
-		})
+		}); err != nil {
+			return err
+		}
 	}
 	return nil
 }
