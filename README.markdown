@@ -54,6 +54,10 @@ and bones to it.
 - Add REST gateway to service launch code
 - Add kubernetes deployment configuration
 
+# Frontend
+If you don't feel like a backend or fullstack guy, create a frontend for these services and submit that instead.
+We're looking for developers in general - fullstack, backend, frontend and SRE.
+
 # Be creative, feel free
 
 Looking forward for your submissions,
