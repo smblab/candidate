@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package smblab.candidate.balance.v1;
+option go_package = "pkg/balance/pb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "api/transactions.proto";
+
+service BalanceService {
+    rpc GetBalance(GetBalanceRequest) returns (BalanceResult) {};
+}
+
+message GetBalanceRequest {
+    string name = 1;
+    google.protobuf.Timestamp from = 2;
+    google.protobuf.Timestamp to = 3;
+
+    oneof bucket {
+        int32 buckets = 4;
+        google.protobuf.Duration duration = 5;
+    }
+}
+
+message Bucket {
+    google.protobuf.Timestamp from = 1;
+    google.protobuf.Timestamp to = 2;
+    smblab.candidate.transactions.v1.Money amount = 3;    
+}
+
+message BalanceResult {
+    string name = 1;
+    google.protobuf.Timestamp from = 2;
+    google.protobuf.Timestamp to = 3;
+    int32 num_buckets = 4;
+
+    repeated Bucket buckets = 5;
+}

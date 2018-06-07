@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package smblab.candidate.transactions.v1;
+option go_package = "pkg/transactions/pb";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service TransactionService {
+
+    rpc CreateTransaction(CreateTransactionRequest) returns (Transaction) {
+        option (google.api.http) = {
+            post: "/v1/accounts/{transaction.parent}/transactions"
+            body: "*"
+        };
+    }
+
+    rpc GetTransaction(GetTransactionRequest) returns (Transaction) {
+        option (google.api.http) = {
+            get: "/v1/accounts/{parent}/transactions/{name}"
+        };
+    }
+
+    rpc DeleteTransaction(DeleteTransactionRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete: "/v1/accounts/{parent}/transactions/{name}"
+        };
+    }
+
+    rpc ListTransactions(ListTransactionsRequest) returns (stream Transaction) {
+        option (google.api.http) = {
+            get: "/v1/accounts/{parent}/transactions"
+        };
+    }
+}
+
+message Money {
+    double amount = 1;
+    string currency_code = 2;
+}
+
+message Transaction {
+    string name = 1;
+    string parent = 2;
+    string message = 3;
+    string remote_account = 4;
+    Money amount = 5;
+    google.protobuf.Timestamp transaction_time = 6;
+}
+
+message CreateTransactionRequest {
+    string request_id = 1;
+    Transaction transaction = 2;
+}
+
+message GetTransactionRequest {
+    string name = 1;
+    string parent = 2;
+}
+
+message DeleteTransactionRequest {
+    string name = 1;
+    string parent = 2;
+}
+
+message ListTransactionsRequest {
+    string parent = 1;
+}
