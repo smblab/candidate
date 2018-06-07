@@ -64,4 +64,4 @@ Looking forward for your submissions,
 
 Sincerely, SMB LAB geeks
 
-(PS: You can tarball your solution and ship it to Torkel <torkel at smblab.no>)
+(PS: You can tarball your solution and ship it to Torkel [torkel at smblab.no])
