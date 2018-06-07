@@ -75,6 +75,9 @@ func (s *Service) CreateTransaction(ctx context.Context, r *pb.CreateTransaction
 
 // GetTransaction ...
 func (s *Service) GetTransaction(ctx context.Context, r *pb.GetTransactionRequest) (*pb.Transaction, error) {
+	s.RLock()
+	defer s.RUnlock()
+
 	t, err := s.repo.GetTransaction(r.Name)
 	if err != nil {
 		return nil, errTransactionNotFound
@@ -95,6 +98,9 @@ func (s *Service) GetTransaction(ctx context.Context, r *pb.GetTransactionReques
 
 // DeleteTransaction ...
 func (s *Service) DeleteTransaction(ctx context.Context, r *pb.DeleteTransactionRequest) (*empty.Empty, error) {
+	s.Lock()
+	defer s.Unlock()
+
 	if err := s.repo.DeleteTransaction(r.Name); err != nil {
 		return nil, err
 	}
@@ -103,6 +109,9 @@ func (s *Service) DeleteTransaction(ctx context.Context, r *pb.DeleteTransaction
 
 // ListTransactions ...
 func (s *Service) ListTransactions(r *pb.ListTransactionsRequest, stream pb.TransactionService_ListTransactionsServer) error {
+	s.RLock()
+	defer s.RUnlock()
+
 	transactions, err := s.repo.ListTransactions(r.Parent)
 	if err != nil {
 		return err
