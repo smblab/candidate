@@ -18,5 +18,9 @@ generate: $(GO_PLUGIN)
 	protoc -I $(PROTOC_INC_PATH) -I$(GOOGLEAPIS_DIR) --plugin=$(GO_PLUGIN) -I. --go_out=$(PKGMAP),plugins=grpc:. api/transactions.proto
 	protoc -I $(PROTOC_INC_PATH) -I$(GOOGLEAPIS_DIR) --plugin=$(GO_PLUGIN) -I. --go_out=$(PKGMAP),plugins=grpc:. api/balance.proto
 
-build: cmd/candidate
+build:
 	go build -o bin/candidate ./cmd/candidate
+
+all: build
+
+.PHONY: build
