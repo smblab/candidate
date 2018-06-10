@@ -19,17 +19,10 @@ var (
 	errAccountNotFound     = grpc.Errorf(codes.NotFound, "Account not found")
 )
 
-type idempotencyKey struct {
-	requestID string
-	name      string
-}
-
 // Service an implementation of TransactionService
 type Service struct {
 	sync.RWMutex
 	repo Repository
-
-	reqs map[idempotencyKey]pb.Transaction
 }
 
 // NewService initializes a new Transaction Service
@@ -44,15 +37,6 @@ func (s *Service) CreateTransaction(ctx context.Context, r *pb.CreateTransaction
 	s.Lock()
 	defer s.Unlock()
 
-	ik := idempotencyKey{
-		requestID: r.RequestId,
-		name:      r.Transaction.Name,
-	}
-
-	if t, found := s.reqs[ik]; found {
-		return &t, nil
-	}
-
 	var t Transaction
 	tstamp, _ := ptypes.Timestamp(r.Transaction.TransactionTime)
 
@@ -65,8 +49,7 @@ func (s *Service) CreateTransaction(ctx context.Context, r *pb.CreateTransaction
 		CurrencyCode:    r.Transaction.Amount.CurrencyCode,
 		TransactionTime: tstamp,
 	}
-	fmt.Println(t)
-
+    
 	if err := s.repo.AddTransaction(&t); err != nil {
 		return nil, err
 	}
