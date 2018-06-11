@@ -38,6 +38,38 @@ The specification for the balance service is defined in `api/balance.proto`, fee
 it if you come up with something better. An empty service implementation is added in `pkg/balance/service.go`, add meat
 and bones to it.
 
+## Current implementation
+We've provided a transaction service, it's able to get, add, remove and list transactions. You can start the transaction
+service by:
+
+```bash
+$ bin/candidate serve transactionservice
+```
+
+After the transaction service is up and running you can utilize other commands to get, add, remove and list transactions:
+
+```bash
+$ bin/candidate add ...
+$ bin/candidate delete ...
+$ bin/candidate list ...
+$ bin/candidate get ...
+```
+
+We've also added a balance service, but the required handlers are left unimplemented. You can launch the balance
+service by:
+
+```bash
+$ bin/candidate serve balanceservice
+```
+
+After the balance and transaction service is up and running you can issue the command:
+
+```bash
+$ bin/candidate balance ...
+````
+
+This command is also not implemented, only the basics are in place.
+
 ## Tasks
 
 1. Implement the missing balance service
