@@ -39,8 +39,17 @@ it if you come up with something better. An empty service implementation is adde
 and bones to it.
 
 ## Current implementation
-We've provided a transaction service, it's able to get, add, remove and list transactions. You can start the transaction
-service by:
+We've provided a transaction service, it's able to get, add, remove and list transactions. You can build the project by doing:
+
+```bash
+$ go get github.com/smblab/candidate
+$ cd $GOPATH/src/github.com/smblab/candidate
+$ go build -o bin/candidate ./cmd/candidate
+$ # or alternatively
+$ make build
+```
+
+You can start the transaction service by running:
 
 ```bash
 $ bin/candidate serve transactionservice
