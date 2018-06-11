@@ -2,7 +2,6 @@ package transactions
 
 import (
 	"context"
-	"fmt"
 	"sync"
 
 	"github.com/golang/protobuf/ptypes"
@@ -49,7 +48,7 @@ func (s *Service) CreateTransaction(ctx context.Context, r *pb.CreateTransaction
 		CurrencyCode:    r.Transaction.Amount.CurrencyCode,
 		TransactionTime: tstamp,
 	}
-    
+
 	if err := s.repo.AddTransaction(&t); err != nil {
 		return nil, err
 	}
